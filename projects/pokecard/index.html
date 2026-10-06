@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokéPack Simulator — Lost Origin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ── HEADER ──────────────────────────────────── -->
+  <header id="header">
+    <div class="header-brand">
+      <span class="brand-logo">⟡</span>
+      <div class="brand-text">
+        <span class="brand-name">PokéPack Simulator</span>
+        <span class="brand-set">Lost Origin · Sword &amp; Shield 11</span>
+      </div>
+    </div>
+    <div class="header-tokens">
+      <div class="token-info">
+        <div class="token-display">
+          <span class="token-coin">T</span>
+          <span id="token-count" class="token-count">500</span>
+          <span class="token-rate">+50/hr</span>
+        </div>
+      </div>
+      <button id="reset-btn" class="btn-reset" title="Reset Progress">↺</button>
+    </div>
+  </header>
+
+  <!-- ── NAV ─────────────────────────────────────── -->
+  <nav id="nav">
+    <button class="nav-tab active" data-tab="shop">Shop</button>
+    <button class="nav-tab" data-tab="inventory">
+      Inventory
+      <span id="inventory-badge" class="nav-badge hidden">0</span>
+    </button>
+    <button class="nav-tab" data-tab="collection">Collection</button>
+    <button class="nav-tab" data-tab="stats">Stats</button>
+  </nav>
+
+  <!-- ── MAIN ────────────────────────────────────── -->
+  <main id="main">
+
+    <!-- SHOP TAB -->
+    <section id="tab-shop" class="tab-pane active">
+      <div class="section-header">
+        <h2>Pokémon TCG Shop</h2>
+        <p class="section-subtitle">
+          Lost Origin Set &nbsp;·&nbsp; Secondary Market Prices &nbsp;·&nbsp; 1 Token = $0.10
+        </p>
+      </div>
+      <div id="shop-grid" class="shop-grid"></div>
+    </section>
+
+    <!-- INVENTORY TAB -->
+    <section id="tab-inventory" class="tab-pane">
+      <div class="section-header">
+        <h2>Pack Inventory</h2>
+        <p class="section-subtitle">Select a product to open it</p>
+      </div>
+      <p id="no-packs-msg" class="empty-msg">No packs in inventory — visit the Shop to buy some!</p>
+      <div id="inventory-list" class="inventory-list"></div>
+    </section>
+
+    <!-- COLLECTION TAB -->
+    <section id="tab-collection" class="tab-pane">
+      <div class="collection-header">
+        <div class="section-header">
+          <h2>My Collection</h2>
+          <p id="collection-progress" class="section-subtitle">0 / 66 unique cards</p>
+        </div>
+        <div class="collection-controls">
+          <input type="text" id="search-input" class="ctrl-search" placeholder="Search by card name…">
+          <select id="filter-rarity" class="ctrl-select">
+            <option value="">All Rarities</option>
+            <option value="common">Common</option>
+            <option value="uncommon">Uncommon</option>
+            <option value="rare">Rare</option>
+            <option value="holo-rare">Holo Rare</option>
+            <option value="reverse-holo">Reverse Holo</option>
+            <option value="radiant-rare">Radiant Rare</option>
+            <option value="v">Pokémon V</option>
+            <option value="vstar">Pokémon VSTAR</option>
+            <option value="ultra-rare">Alt Art (Ultra Rare)</option>
+            <option value="trainer-gallery">Trainer Gallery Holo</option>
+            <option value="trainer-gallery-v">Trainer Gallery V</option>
+            <option value="trainer-gallery-vmax">Trainer Gallery VMAX</option>
+            <option value="trainer-gallery-ultra">Trainer Gallery Ultra Rare</option>
+            <option value="secret-rare">Secret Rare</option>
+            <option value="rainbow-rare">Rainbow Rare</option>
+            <option value="special-illustration-rare">Special Illustration Rare</option>
+          </select>
+          <select id="filter-type" class="ctrl-select">
+            <option value="">All Types</option>
+            <option value="Lightning">Lightning</option>
+            <option value="Psychic">Psychic</option>
+            <option value="Darkness">Darkness</option>
+            <option value="Dragon">Dragon</option>
+            <option value="Water">Water</option>
+            <option value="Grass">Grass</option>
+            <option value="Fire">Fire</option>
+            <option value="Fighting">Fighting</option>
+            <option value="Metal">Metal</option>
+            <option value="Colorless">Colorless</option>
+            <option value="Trainer">Trainer</option>
+          </select>
+          <button id="sell-dupes-btn" class="btn-secondary">Sell Duplicates</button>
+        </div>
+        <div class="coll-view-toggle">
+          <button id="view-owned"   class="view-btn active">Owned</button>
+          <button id="view-missing" class="view-btn">Missing</button>
+        </div>
+      </div>
+      <div id="collection-grid" class="collection-grid"></div>
+    </section>
+
+    <!-- STATS TAB -->
+    <section id="tab-stats" class="tab-pane">
+      <div class="section-header">
+        <h2>Statistics</h2>
+        <p class="section-subtitle">Your pack opening history and collection value</p>
+      </div>
+      <div id="stats-content" class="stats-content"></div>
+    </section>
+
+  </main>
+
+  <!-- ── PACK OPENING OVERLAY ────────────────────── -->
+  <div id="opening-overlay" class="overlay hidden">
+    <div id="opening-modal" class="opening-modal">
+
+      <div class="opening-header">
+        <div class="opening-title-area">
+          <h2 id="opening-title">Opening Pack</h2>
+          <span id="opening-pack-counter" class="opening-pack-counter"></span>
+        </div>
+        <button id="opening-close" class="btn-close" title="Collect all cards &amp; exit">✕</button>
+      </div>
+
+      <!-- Card flip stage -->
+      <div id="card-stage" class="card-stage">
+        <div id="flip-container" class="flip-container">
+          <div class="flip-inner">
+            <div class="flip-back">
+              <div class="card-back-design"></div>
+            </div>
+            <div class="flip-front" id="flip-front"></div>
+          </div>
+        </div>
+        <!-- Summary shown after all 10 cards revealed -->
+        <div id="pack-summary" class="pack-summary hidden"></div>
+      </div>
+
+      <!-- 10-dot progress bar -->
+      <div id="progress-dots" class="progress-dots"></div>
+
+      <!-- Action buttons -->
+      <div class="opening-controls">
+        <button id="btn-reveal"     class="btn-primary btn-reveal">Click to Reveal</button>
+        <button id="btn-reveal-all" class="btn-secondary">Reveal All</button>
+        <button id="btn-next-pack"  class="btn-primary  hidden">Next Pack →</button>
+        <button id="btn-collect-all"class="btn-accent   hidden">Collect All Cards</button>
+      </div>
+
+      <!-- Revealed card mini-strip -->
+      <div id="revealed-strip" class="revealed-strip"></div>
+
+    </div>
+  </div>
+
+  <!-- ── RESET CONFIRM MODAL ─────────────────────── -->
+  <div id="reset-modal" class="overlay hidden">
+    <div class="confirm-modal">
+      <h3>Reset Progress?</h3>
+      <p>This will permanently delete all your tokens, cards, and statistics. This cannot be undone.</p>
+      <div class="confirm-buttons">
+        <button id="reset-cancel"  class="btn-secondary">Cancel</button>
+        <button id="reset-confirm" class="btn-danger">Reset Everything</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOAST NOTIFICATIONS ─────────────────────── -->
+  <div id="toast-container" class="toast-container"></div>
+
+</div>
+
+<script src="js/cards.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Content Planner</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="authOverlay" class="auth-overlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">CP</div>
+        <div>
+          <p class="eyebrow">Group studio</p>
+          <h1 id="authTitle">Content Planner</h1>
+        </div>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth-tab="login" type="button">Log in</button>
+        <button class="auth-tab" data-auth-tab="register" type="button">Create account</button>
+      </div>
+      <form id="loginForm" class="auth-form">
+        <label>Username<input id="loginUsername" type="text" autocomplete="username" required placeholder="Your username"></label>
+        <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Your password"></label>
+        <p id="loginError" class="auth-error" hidden></p>
+        <button class="btn primary" type="submit">Log in</button>
+      </form>
+      <form id="registerForm" class="auth-form" hidden>
+        <label>Username<input id="regUsername" type="text" autocomplete="username" required placeholder="Choose a username (min 3 chars)"></label>
+        <label>Password<input id="regPassword" type="password" autocomplete="new-password" required placeholder="Choose a password (min 6 chars)"></label>
+        <label>Confirm password<input id="regConfirm" type="password" autocomplete="new-password" required placeholder="Repeat your password"></label>
+        <label>Group name <span style="font-weight:400;opacity:.7">(optional — creates a new group)</span><input id="regGroup" type="text" autocomplete="off" placeholder="e.g. Content Planner"></label>
+        <p id="registerError" class="auth-error" hidden></p>
+        <button class="btn primary" type="submit">Create account</button>
+      </form>
+    </div>
+  </div>
+
+  <aside class="sidebar" aria-label="Workspace navigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">CP</div>
+        <div>
+          <p class="eyebrow" id="sidebarGroupLabel">No group</p>
+          <h1>Content Planner</h1>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active" data-section="dashboard" type="button">
+          <span class="icon icon-grid" aria-hidden="true"></span>
+          Overview
+        </button>
+        <button class="nav-item" data-section="content" type="button">
+          <span class="icon icon-play" aria-hidden="true"></span>
+          Content
+        </button>
+        <button class="nav-item" data-section="schedule" type="button">
+          <span class="icon icon-cal" aria-hidden="true"></span>
+          Schedule
+        </button>
+        <button class="nav-item" data-section="team" type="button">
+          <span class="icon icon-stats" aria-hidden="true"></span>
+          Team
+        </button>
+      </nav>
+
+    </aside>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">May sprint</p>
+          <h2>Content planner</h2>
+        </div>
+        <div class="topbar-actions">
+<div class="user-badge" id="userBadge" hidden>
+            <span id="userLabel"></span>
+            <button class="btn secondary" id="logoutBtn" type="button">Log out</button>
+          </div>
+          <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+            <span class="theme-toggle-track" aria-hidden="true">
+              <span class="theme-toggle-thumb"></span>
+            </span>
+            <span class="theme-toggle-label">Dark</span>
+          </button>
+          <button class="btn secondary" id="focusToday" type="button">Today</button>
+          <button class="btn primary" id="newPlanBtn" type="button">New plan</button>
+        </div>
+      </header>
+
+      <section class="dashboard-grid section-view active" data-view="dashboard">
+        <article class="metric-card">
+          <span class="metric-value">0</span>
+          <h3>Planned pieces</h3>
+          <p>Content plans across all platforms.</p>
+        </article>
+        <article class="metric-card">
+          <span class="metric-value">0</span>
+          <h3>Pending invites</h3>
+          <p>Invites waiting for your response.</p>
+        </article>
+        <article class="metric-card">
+          <span class="metric-value">0</span>
+          <h3>Schedule conflicts</h3>
+          <p>Calendar marks overlaps in red.</p>
+        </article>
+        <article class="metric-card">
+          <span class="metric-value">—</span>
+          <h3>Team reach</h3>
+          <p>Combined followers and subscribers.</p>
+        </article>
+      </section>
+
+      <section class="workspace section-view active" data-view="dashboard">
+        <div class="panel wide">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Your schedule</p>
+              <h2>Next up</h2>
+            </div>
+          </div>
+          <div id="nextUpCard"></div>
+          <div class="panel-heading compact" style="margin-top:28px">
+            <div>
+              <p class="eyebrow">Your schedule</p>
+              <h2>Upcoming</h2>
+            </div>
+          </div>
+          <div class="content-list" id="myUpcomingList"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Team</p>
+              <h2>Team's upcoming</h2>
+            </div>
+          </div>
+          <div class="timeline" id="teamUpcomingList"></div>
+        </div>
+      </section>
+
+      <section class="workspace section-view active channel-overview" data-view="dashboard">
+        <div class="panel wide">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Group channels</p>
+              <h2>Team channels</h2>
+            </div>
+          </div>
+          <div class="channel-strip" id="overviewChannelStrip"></div>
+        </div>
+      </section>
+
+      <section class="workspace section-view" data-view="content">
+        <div class="panel wide platform-panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">My content</p>
+              <h2>Twitch streams</h2>
+            </div>
+          </div>
+          <div class="platform-feed" data-platform-feed="Twitch"></div>
+          <div class="panel-heading compact" style="margin-top:32px">
+            <div>
+              <p class="eyebrow">My content</p>
+              <h2>YouTube videos</h2>
+            </div>
+          </div>
+          <div class="platform-feed" data-platform-feed="YouTube"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Team</p>
+              <h2>Twitch channels</h2>
+            </div>
+            <button class="btn secondary" id="addTwitchChannelBtn" type="button">+ Add</button>
+          </div>
+          <div id="twitchChannelStrip" class="side-channel-list"></div>
+          <div class="quick-channel-form" id="twitchQuickForm" hidden>
+            <label>Channel URL<input class="quick-url-input" type="text" placeholder="twitch.tv/yourchannel"></label>
+            <p class="quick-msg notice" hidden></p>
+            <div class="form-actions">
+              <button class="btn secondary quick-cancel-btn" type="button">Cancel</button>
+              <button class="btn primary quick-import-btn" type="button">Import</button>
+            </div>
+            <div class="quick-fields" hidden>
+              <label>Channel name<input class="quick-name" type="text"></label>
+              <label>Tag / handle<input class="quick-tag" type="text"></label>
+              <label>Followers<input class="quick-subs" type="text"></label>
+              <p class="quick-save-msg notice" hidden></p>
+              <div class="form-actions">
+                <button class="btn secondary quick-back-btn" type="button">← Back</button>
+                <button class="btn primary quick-save-btn" type="button">Save</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--hairline-light)">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Team</p>
+                <h2>YouTube channels</h2>
+              </div>
+              <button class="btn secondary" id="addYoutubeChannelBtn" type="button">+ Add</button>
+            </div>
+            <div id="youtubeChannelStrip" class="side-channel-list"></div>
+            <div class="quick-channel-form" id="youtubeQuickForm" hidden>
+              <label>Channel URL<input class="quick-url-input" type="text" placeholder="youtube.com/@YourChannel"></label>
+              <p class="quick-msg notice" hidden></p>
+              <div class="form-actions">
+                <button class="btn secondary quick-cancel-btn" type="button">Cancel</button>
+                <button class="btn primary quick-import-btn" type="button">Import</button>
+              </div>
+              <div class="quick-fields" hidden>
+                <label>Channel name<input class="quick-name" type="text"></label>
+                <label>Tag / handle<input class="quick-tag" type="text"></label>
+                <label>Subscribers<input class="quick-subs" type="text"></label>
+                <p class="quick-save-msg notice" hidden></p>
+                <div class="form-actions">
+                  <button class="btn secondary quick-back-btn" type="button">← Back</button>
+                  <button class="btn primary quick-save-btn" type="button">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace section-view" data-view="schedule">
+        <form class="panel wide planner-form" id="plannerForm">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Create plan</p>
+              <h2>Schedule a content block</h2>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>Title<input id="planTitle" required></label>
+            <label>Platform<select id="planPlatform"><option>Twitch</option><option>YouTube</option></select></label>
+            <label>Date<input id="planDate" type="date"></label>
+            <label>Time<input id="planTime" type="time"></label>
+            <label>Owner<input id="planOwner" type="text" readonly></label>
+            <label>Invite collaborators<input id="planInvite" placeholder="Teammate usernames, comma-separated"></label>
+          </div>
+          <label class="notes-label">Notes<textarea id="planNotes"></textarea></label>
+          <div class="form-actions">
+            <p id="conflictNotice" class="notice">No conflict detected for this slot.</p>
+            <button class="btn primary" type="submit">Add to planner</button>
+          </div>
+        </form>
+        <div class="panel wide">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Group schedule</p>
+              <h2>Calendar</h2>
+            </div>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+      </section>
+
+      <section class="workspace section-view" data-view="team">
+        <div class="panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Team</p>
+              <h2 id="statsHeading">Members</h2>
+            </div>
+          </div>
+          <div id="statsGrid" class="member-list"></div>
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--hairline-light)">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Manage</p>
+                <h2>Invite to group</h2>
+              </div>
+            </div>
+            <form id="teamInviteForm" class="team-invite-form">
+              <label>Invite by username
+                <input id="teamInviteUsername" type="text" placeholder="Enter a username" required>
+              </label>
+              <p id="teamInviteMsg" class="notice" hidden></p>
+              <button class="btn primary" type="submit">Send invite</button>
+            </form>
+            <div id="teamInviteList" class="invite-list" style="margin-top:16px;"></div>
+          </div>
+        </div>
+        <div class="panel wide">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">All channels</p>
+              <h2>Team channels</h2>
+            </div>
+          </div>
+          <div id="teamChannelGrid" class="team-channel-grid"></div>
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--hairline-light)">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Collaboration</p>
+                <h2>Content invites</h2>
+              </div>
+            </div>
+            <div class="invite-list" id="inviteList"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

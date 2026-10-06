@@ -1,0 +1,116 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f1115;
+  color: #f1f1f1;
+}
+
+.site-header {
+  padding: 2.5rem 1.5rem 1.5rem;
+  text-align: center;
+}
+
+.site-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 2.25rem;
+}
+
+.site-header p {
+  margin: 0;
+  color: #9aa0ab;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  background: #1b1e25;
+  border: 1px solid #2c303a;
+  border-radius: 14px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+  border-color: #4f7cff;
+}
+
+.project-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.project-card p {
+  margin: 0 0 1rem;
+  color: #9aa0ab;
+  font-size: 0.95rem;
+}
+
+.open-hint {
+  color: #4f7cff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0f1115;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.viewer-overlay[hidden] {
+  display: none;
+}
+
+.viewer-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #1b1e25;
+  border-bottom: 1px solid #2c303a;
+}
+
+.viewer-bar button {
+  background: #4f7cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.viewer-bar button:hover {
+  background: #3d66e0;
+}
+
+#viewer-title {
+  font-weight: 600;
+  color: #f1f1f1;
+}
+
+#viewer-frame {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: #fff;
+}

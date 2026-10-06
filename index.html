@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kyle Noyes Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>Kyle Noyes Portfolio</h1>
+    <p>Various project ideas that we're created</p>
+  </header>
+
+  <main>
+    <div class="project-grid">
+      <article class="project-card" data-project="project1100">
+        <h2>Content Planner</h2>
+        <p>Group content planning app with login, channels, and shared workspaces.</p>
+        <span class="open-hint">Click to open &rarr;</span>
+      </article>
+      <article class="project-card" data-project="pokecard">
+        <h2>PokéPack Simulator</h2>
+        <p>Pokémon card pack opening simulator for the Lost Origin set.</p>
+        <span class="open-hint">Click to open &rarr;</span>
+      </article>
+      <article class="project-card" data-project="steambacklog">
+        <h2>Steam Backlog RPG</h2>
+        <p>Turns your Steam backlog into an RPG quest log.</p>
+        <span class="open-hint">Click to open &rarr;</span>
+      </article>
+      <article class="project-card" data-project="urate">
+        <h2>URate</h2>
+        <p>Community-powered video game rating site.</p>
+        <span class="open-hint">Click to open &rarr;</span>
+      </article>
+    </div>
+  </main>
+
+  <div class="viewer-overlay" id="viewer-overlay" hidden>
+    <div class="viewer-bar">
+      <button id="viewer-back">&larr; Back to Portfolio</button>
+      <span id="viewer-title"></span>
+    </div>
+    <iframe id="viewer-frame" title="Project preview"></iframe>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
